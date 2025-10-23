@@ -1,4 +1,4 @@
-package uz.pdp.dbagent.model;
+package uz.pdp.dbagent.config;
 
 
 import lombok.Getter;
@@ -21,8 +21,13 @@ public class ApplicationProps {
     @Value("${application.name}")
     private String projectName;
 
-    @Value("${application.hub-url}")
-    private String hubUrl;
+    @Value("${application.register-url}")
+    private String registerUrl;
 
+    @Value("${application.get-user-update-url}")
+    private String getUserUpdateUrl;
+
+    @Value("${application.enable-register:false}")
+    private Boolean enableRegister;
 
 }

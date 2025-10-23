@@ -1,13 +1,20 @@
-package uz.pdp.dbagent.model;
+package uz.pdp.dbagent.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import uz.pdp.dbagent.config.ApplicationProps;
+import uz.pdp.dbagent.transfer.AgentRequest;
+import uz.pdp.dbagent.transfer.AgentResponse;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Date;
+import java.util.Properties;
 
 @Service
 @Slf4j
@@ -25,26 +32,44 @@ public class UserService {
     @PostConstruct
     public void init() {
 
-        AgentRequest body = AgentRequest.builder()
+        if (!applicationProps.getEnableRegister()) {
+            return;
+        }
+
+        AgentRequest reqBody = AgentRequest
+                .builder()
                 .username(applicationProps.getDbUsername())
                 .password(applicationProps.getDbPassword())
-                .projectName(applicationProps.getProjectName())
+                .name(applicationProps.getProjectName())
                 .dbUrl(applicationProps.getDbUrl())
                 .build();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("API-KEY", "my-api-key");
-        HttpEntity<AgentRequest> request = new HttpEntity<>(body, headers);
+        HttpEntity<AgentRequest> request = new HttpEntity<>(reqBody);
 
-        ResponseEntity<String> exchange = restTemplate.exchange("http://localhost:8080/api/v1/project-agent", HttpMethod.POST, request, String.class);
+        // create default roles
+
+        //call hub's create agent api
+        ResponseEntity<AgentResponse> exchange = restTemplate.postForEntity(applicationProps.getRegisterUrl(), request, AgentResponse.class);
 
         if (!exchange.getStatusCode().is2xxSuccessful()) {
             log.error("Error in initializing agent : {}", exchange.getBody());
+            System.exit(1);
             return;
         }
 
         log.info("Successfully initialized agent : {}", exchange.getBody());
 
+
+    }
+
+
+    @Scheduled(cron = "0 */5 * * * *")
+    public void updateUsers() {
+
+
+        //call  User[]
+
+        //
 
     }
 }
