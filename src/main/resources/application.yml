@@ -10,10 +10,15 @@ spring:
 
 application:
   register-url: http://localhost:8080/api/v1/project-agent
-  get-user-update-url: http://localhost:8080/api/v1/agent/updates
+  get-user-update-url: http://localhost:8080/api/v1/agent/updates?agentId={agentId}&version={version}
   name: project2
-  enable-register: false
+  enable-register: true
 
 
 server:
   port: 8082
+
+
+query:
+  create-user: create user :username with password :password
+  get-user: select * from pg_user u where u.usename = ?

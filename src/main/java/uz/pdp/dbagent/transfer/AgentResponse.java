@@ -1,16 +1,15 @@
 package uz.pdp.dbagent.transfer;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgentResponse {
-    private String id;
+
+
+    private @NonNull String id;
     private String name;
     private String databaseUsername;
     private String databaseUrl;
