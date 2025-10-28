@@ -5,8 +5,9 @@ plugins {
 }
 
 group = 'uz.pdp'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 description = 'db-agent'
+
 
 java {
     toolchain {
@@ -27,6 +28,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.shell:spring-shell-starter:3.0.2'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
