@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -27,11 +26,9 @@ public class UserService {
     private final RestTemplate restTemplate;
     private final UserProcessor processor;
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
 
     // call register agent to hub
-    @PostConstruct
+//    @PostConstruct
     public void init() {
 
         if (!applicationProps.getEnableRegister()) {
@@ -47,11 +44,11 @@ public class UserService {
                 .build();
 
         HttpEntity<AgentRequest> request = new HttpEntity<>(reqBody);
-
         // create default roles
 
         //call hub's create agent api
         ResponseEntity<AgentResponse> exchange = restTemplate.postForEntity(applicationProps.getRegisterUrl(), request, AgentResponse.class);
+
 
         if (!exchange.getStatusCode().is2xxSuccessful()) {
             log.error("Error in initializing agent : {}", exchange.getBody());
@@ -61,13 +58,13 @@ public class UserService {
         AgentResponse response = exchange.getBody();
         VersionProps.setAgentId(response.getId());
         log.info("Successfully initialized agent : {}", exchange.getBody());
-
-
     }
 
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "0 43 12 * * ?")
+    @Scheduled(fixedRate = 10000)
     public void updateUsers() {
+
         Map<String, Object> params = Map.of(
                 "agentId", VersionProps.getAgentId(),
                 "version", VersionProps.getVersion()
@@ -76,6 +73,7 @@ public class UserService {
         log.info("Successfully retrieved users : {}", Arrays.toString(users));
 
         if (users == null || users.length == 0) return;
+
         processor.update(Arrays.stream(users).toList());
         log.info("Successfully updates users");
 

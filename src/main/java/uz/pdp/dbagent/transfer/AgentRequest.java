@@ -8,11 +8,16 @@ import lombok.Data;
 @Builder
 @Data
 public class AgentRequest {
+    private String name;
+
+    @JsonProperty("databaseUsername")
     private String username;
+
+    @JsonProperty("databasePassword")
     private String password;
 
     @JsonProperty("databaseUrl")
     private String dbUrl;
 
-    private String name;
+
 }

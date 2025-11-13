@@ -5,11 +5,8 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/test
 
-
-
-
 application:
-  register-url: http://localhost:8080/api/v1/project-agent
+  register-url: http://localhost:8080/api/v1/agent/register
   get-user-update-url: http://localhost:8080/api/v1/agent/updates?agentId={agentId}&version={version}
   name: project2
   enable-register: true
@@ -18,7 +15,31 @@ application:
 server:
   port: 8082
 
-
 query:
-  create-user: create user :username with password :password
-  get-user: select * from pg_user u where u.usename = ?
+    # User mavjudmi?
+    exists: SELECT 1 FROM pg_roles WHERE rolname = '%s'
+
+    # User yaratish (LOGIN + PASSWORD)
+    create: CREATE ROLE %s WITH LOGIN PASSWORD '%s'
+
+    # Parolni yangilash
+    alter-password: ALTER ROLE %s WITH PASSWORD '%s'
+
+    # Userni o'chirish
+    drop-user: DROP USER %s
+
+    # Login ni yoqish
+    enable: ALTER ROLE %s WITH LOGIN
+
+    # Userning hozirgi rollari
+    current-roles: |
+      SELECT r.rolname
+      FROM pg_roles r
+      JOIN pg_auth_members m ON r.oid = m.roleid
+      JOIN pg_roles u ON m.member = u.oid
+      WHERE u.rolname = '%s'
+
+    # Role berish / olish
+    grant-role: GRANT %s TO %s
+    revoke-role: REVOKE %s FROM %s
+

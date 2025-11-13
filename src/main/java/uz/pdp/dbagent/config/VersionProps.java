@@ -33,7 +33,6 @@ public class VersionProps {
         }
     }
 
-    // === GET METHODS ===
     public static String getAgentId() {
         return getProperties().getProperty("agentId");
     }
@@ -43,7 +42,6 @@ public class VersionProps {
         return version != null ? Integer.parseInt(version) : null;
     }
 
-    // === SET METHODS ===
     public static void setAgentId(@Nullable String agentId) {
         if (agentId == null || agentId.isBlank()) {
             throw new IllegalArgumentException("agentId cannot be null or empty");

@@ -21,7 +21,7 @@ public class ApplicationProps {
     @Value("${application.name}")
     private String projectName;
 
-    @Value("${application.register-url}")
+    @Value("${application.register-url:http://localhost:8080/api/v1/project-agent}")
     private String registerUrl;
 
     @Value("${application.get-user-update-url}")

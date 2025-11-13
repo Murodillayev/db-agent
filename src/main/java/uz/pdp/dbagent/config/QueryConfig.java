@@ -9,7 +9,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "query")
 public class QueryConfig {
-
-    private String createUser;
-    private String getUser;
+    private String exists;
+    private String create;
+    private String alterPassword;
+    private String dropUser;
+    private String enable;
+    private String currentRoles;
+    private String grantRole;
+    private String revokeRole;
 }
